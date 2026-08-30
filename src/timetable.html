@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LT timetable</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="stage tt-stage">
+    <div class="tt-header">
+      <div class="h-left">
+        <div class="kicker">LIGHTNING&nbsp;TALK</div>
+        <h1>タイムテーブル</h1>
+      </div>
+      <div class="h-right">
+        <div class="num">{{TOTAL}}</div>
+        <div>セッション</div>
+      </div>
+    </div>
+
+    <div class="tt-grid">
+      {{CARDS}}
+    </div>
+
+    <div class="tt-footer">
+      <span>{{DATE}}</span>
+      <span>LT FES</span>
+    </div>
+  </div>
+</body>
+</html>

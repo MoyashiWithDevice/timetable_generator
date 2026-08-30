@@ -1,0 +1,13 @@
+{
+  "name": "lt-slide-generator",
+  "version": "1.0.0",
+  "description": "16:9 LTタイムテーブル画像ジェネレータ",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node generate.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^23.11.1"
+  }
+}

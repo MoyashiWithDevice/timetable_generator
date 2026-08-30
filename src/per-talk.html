@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LT slide</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="stage">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+    <div class="header">
+      <div class="brand"><span class="dot"></span>LIGHTNING&nbsp;TALK</div>
+      <div class="meta">{{DATE}}</div>
+    </div>
+
+    <div class="content">
+      <div class="number">
+        <span class="no-label">No.</span>
+        <span class="no-value">{{SLOT}}</span>
+      </div>
+      <div class="title">{{TITLE}}</div>
+      <div class="divider"></div>
+      <div class="handle">{{HANDLE}}</div>
+      <div class="tags">{{TAGS}}</div>
+    </div>
+
+    <div class="footer">
+      <span>LT FES</span>
+      <span>全 {{TOTAL}} セッション</span>
+    </div>
+  </div>
+</body>
+</html>
