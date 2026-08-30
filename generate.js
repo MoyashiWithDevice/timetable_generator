@@ -2,24 +2,39 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer-core";
+import { loadDefaultJapaneseParser } from "budoux";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const CONFIG = {
-  chromePath: process.env.CHROME_PATH || "/usr/bin/google-chrome",
-  outputDir: path.join(__dirname, "slides"),
-  perTalkDir: path.join(__dirname, "slides", "per-talk"),
-  date: process.env.LT_DATE || "2026.08.29 FRI",
-  event: "LT FES",
-};
+let jpParser = null;
+
+async function loadConfig() {
+  try {
+    const config = await readFile(path.join(__dirname, "data", "config.json"), "utf8");
+    return JSON.parse(config);
+  } catch {
+    return {};
+  }
+}
+
+const CONFIG = {};
+
+async function buildConfig(config) {
+  CONFIG.chromePath = process.env.CHROME_PATH || "/usr/bin/google-chrome";
+  CONFIG.outputDir = path.join(__dirname, "slides");
+  CONFIG.perTalkDir = path.join(__dirname, "slides", "per-talk");
+  CONFIG.date = config.date || process.env.LT_DATE || "2026.08.29 FRI";
+  CONFIG.event = config.event || "LT FES";
+}
 
 const tokens = (data, index, total) => ({
   "{{DATE}}": CONFIG.date,
-  "{{TITLE}}": escapeHtml(data.title || ""),
+  "{{TITLE}}": renderTitle(data.title),
   "{{HANDLE}}": escapeHtml(data.handleName || ""),
   "{{TAGS}}": (data.tags || []).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join(""),
   "{{SLOT}}": String(index + 1).padStart(2, "0"),
   "{{TOTAL}}": String(total),
+  "{{EVENT}}": CONFIG.event,
 });
 
 function escapeHtml(str) {
@@ -28,6 +43,18 @@ function escapeHtml(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function renderLine(line) {
+  const parts = jpParser.parse(line);
+  return parts.map(escapeHtml).join("<wbr>");
+}
+
+function renderTitle(title) {
+  return String(title || "")
+    .split("\n")
+    .map(renderLine)
+    .join("<br>");
 }
 
 async function loadTemplate(templatePath) {
@@ -54,6 +81,8 @@ async function screenshot(page, html, filePath) {
 }
 
 async function main() {
+  const config = await loadConfig();
+  await buildConfig(config);
   const schedule = JSON.parse(await readFile(path.join(__dirname, "data", "schedule.json"), "utf8"));
   const total = schedule.length;
 
@@ -62,6 +91,8 @@ async function main() {
 
   const perTalkHtml = await loadTemplate(path.join(__dirname, "src", "per-talk.html"));
   const ttHtml = await loadTemplate(path.join(__dirname, "src", "timetable.html"));
+
+  jpParser = await loadDefaultJapaneseParser();
 
   const browser = await puppeteer.launch({
     executablePath: CONFIG.chromePath,
@@ -96,7 +127,7 @@ async function main() {
       })
       .join("\n");
 
-    const ttFull = applyTokens(ttHtml, { "{{TOTAL}}": String(total), "{{DATE}}": CONFIG.date, "{{CARDS}}": cards });
+    const ttFull = applyTokens(ttHtml, { "{{TOTAL}}": String(total), "{{DATE}}": CONFIG.date, "{{EVENT}}": CONFIG.event, "{{CARDS}}": cards });
     const ttFile = path.join(CONFIG.outputDir, "timetable.png");
     await screenshot(page, ttFull, ttFile);
     console.log(`timetable: ${ttFile}`);

@@ -107,7 +107,9 @@ body {
   line-height: 1.28;
   font-weight: 700;
   letter-spacing: -0.01em;
-  text-wrap: balance;
+  text-wrap: pretty;
+  overflow-wrap: normal;
+  word-break: keep-all;
   color: var(--ink);
 }
 
@@ -238,6 +240,9 @@ body {
   font-weight: 700;
   margin: 24px 0 0;
   text-align: left;
+  text-wrap: pretty;
+  overflow-wrap: normal;
+  word-break: keep-all;
 }
 
 .tt-card .tags { margin-top: auto; justify-content: flex-start; padding-top: 20px; }

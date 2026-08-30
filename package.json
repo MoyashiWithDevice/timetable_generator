@@ -8,6 +8,7 @@
     "generate": "node generate.js"
   },
   "dependencies": {
+    "budoux": "^0.9.1",
     "puppeteer-core": "^23.11.1"
   }
 }
