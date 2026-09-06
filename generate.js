@@ -127,7 +127,14 @@ async function main() {
       })
       .join("\n");
 
-    const ttFull = applyTokens(ttHtml, { "{{TOTAL}}": String(total), "{{DATE}}": CONFIG.date, "{{EVENT}}": CONFIG.event, "{{CARDS}}": cards });
+    const stageClass = total > 3 ? "compact" : "";
+    const ttFull = applyTokens(ttHtml, {
+      "{{STAGE_CLASS}}": stageClass,
+      "{{TOTAL}}": String(total),
+      "{{DATE}}": CONFIG.date,
+      "{{EVENT}}": CONFIG.event,
+      "{{CARDS}}": cards,
+    });
     const ttFile = path.join(CONFIG.outputDir, "timetable.png");
     await screenshot(page, ttFull, ttFile);
     console.log(`timetable: ${ttFile}`);

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja" class="app-html">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LT Timetable & Slide Generator</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="stylesheet" href="/src/web/app.css" />
+</head>
+<body class="app-body">
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="app-brand">
+      <span class="badge-dot"></span>
+      <span>LT Timetable & Slide Generator</span>
+    </div>
+    <div class="header-actions">
+      <input type="file" id="file-input" accept=".json" />
+      <button class="btn btn-secondary btn-sm" id="btn-import-json" title="JSONファイルを読み込む">
+        📂 JSON読込
+      </button>
+      <button class="btn btn-secondary btn-sm" id="btn-export-json" title="現在のデータをJSON保存">
+        💾 JSON保存
+      </button>
+      <button class="btn btn-ghost btn-sm" id="btn-reset-data" title="初期サンプルに戻す">
+        🔄 リセット
+      </button>
+    </div>
+  </header>
+
+  <!-- App Main Layout -->
+  <main class="app-layout">
+    <!-- Left Pane: Editor Panel -->
+    <aside class="editor-pane">
+      <div class="editor-scroll">
+        <!-- Event Settings -->
+        <section class="editor-section">
+          <div class="section-title-row">
+            <span class="section-title">イベント基本設定</span>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label for="event-name">イベント名</label>
+              <input type="text" id="event-name" class="input-text" placeholder="例: LT FES" />
+            </div>
+            <div class="field-group">
+              <label for="event-date">開催日</label>
+              <input type="text" id="event-date" class="input-text" placeholder="例: 2026.08.29 FRI" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Sessions List -->
+        <section class="editor-section">
+          <div class="section-title-row">
+            <span class="section-title">セッション一覧</span>
+            <button class="btn btn-primary btn-sm" id="btn-add-session">
+              ＋ セッション追加
+            </button>
+          </div>
+          <div class="session-list" id="session-list">
+            <!-- Rendered by app.js -->
+          </div>
+        </section>
+      </div>
+
+      <!-- Editor Footer / Actions -->
+      <footer class="editor-footer">
+        <button class="btn btn-primary btn-full" id="btn-export-all">
+          📦 全スライドを一括ダウンロード (ZIP)
+        </button>
+        <button class="btn btn-secondary btn-full" id="btn-export-current">
+          🖼️ 表示中のスライドを保存 (PNG)
+        </button>
+      </footer>
+    </aside>
+
+    <!-- Right Pane: Preview Area -->
+    <section class="preview-pane">
+      <div class="preview-toolbar">
+        <div class="preview-nav">
+          <button class="icon-btn" id="btn-prev-slide" title="前のスライド">◀</button>
+          <button class="icon-btn" id="btn-next-slide" title="次のスライド">▶</button>
+        </div>
+        <div class="view-tabs" id="view-tabs">
+          <!-- Rendered by app.js -->
+        </div>
+        <div class="resolution-badge">
+          1920 × 1080 (16:9)
+        </div>
+      </div>
+
+      <!-- Viewport that centers and scales the 16:9 slide -->
+      <div class="preview-viewport" id="preview-viewport">
+        <div class="slide-scaler" id="slide-scaler">
+          <!-- Rendered by app.js -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Offscreen 1920x1080 container for crystal-clear PNG generation -->
+  <div id="offscreen-container"></div>
+
+  <!-- Progress Modal for ZIP generation -->
+  <div class="modal-overlay" id="progress-modal">
+    <div class="modal-card">
+      <div class="spinner"></div>
+      <div class="modal-title">スライド画像を生成中</div>
+      <div class="modal-status" id="modal-status">準備中...</div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/web/app.js"></script>
+</body>
+</html>

@@ -3,3 +3,5 @@ data/config.json
 slides/*
 node_modules/*
 slides/.*
+dist
+
